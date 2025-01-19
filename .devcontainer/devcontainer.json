@@ -1,0 +1,24 @@
+{
+  "name": "Bom dia Discord",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "go.gopath": "/go",
+        "go.toolsGopath": "/go",
+        "terminal.integrated.shell.linux": "/bin/bash"
+      },
+      "extensions": [
+        "golang.go", // Extensão oficial do Go para VS Code
+        "github.vscode-pull-request-github" // Extensão para interação com GitHub (opcional)
+      ]
+    }
+  },
+  "forwardPorts": [
+    8080
+  ],
+  "postCreateCommand": "go install golang.org/x/tools/gopls@latest",
+  "remoteUser": "root"
+}

@@ -1,0 +1,25 @@
+# Executáveis e arquivos compilados do Go
+
+/bin/
+
+/pkg/
+
+*.exe
+
+*.log
+
+# Arquivos gerados pelo Go module
+
+/vendor/
+
+# Configurações locais do sistema operacional ou editor
+
+.DS_Store
+
+.vscode/
+
+# .devcontainer/
+
+# Configurações do container
+
+*.tar.gz
