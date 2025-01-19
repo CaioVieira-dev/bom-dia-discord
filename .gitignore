@@ -5,7 +5,7 @@
 /pkg/
 
 *.exe
-
+.env
 *.log
 
 # Arquivos gerados pelo Go module
