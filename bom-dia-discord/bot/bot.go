@@ -19,6 +19,10 @@ func RegisterSlashCommands(s *discordgo.Session) error {
 			Description: "Responde com uma mensagem amigável de 'Bom dia!'",
 		},
 		{
+			Name:        "encerrando",
+			Description: "Responde com uma mensagem amigável de 'Bom descanso!'",
+		},
+		{
 			Name:        "ping",
 			Description: "Responde com Pong!",
 		},
