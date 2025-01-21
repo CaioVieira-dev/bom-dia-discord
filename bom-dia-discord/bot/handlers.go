@@ -6,6 +6,35 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// Handler para Slash Commands
+func slashCommandHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	switch i.ApplicationCommandData().Name {
+	case "bom-dia":
+		response := "Bom dia! Espero que você tenha um ótimo dia hoje! 🌞"
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: response,
+			},
+		})
+	case "ping":
+		response := "Pong!"
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: response,
+			},
+		})
+	default:
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "Comando não reconhecido.",
+			},
+		})
+	}
+}
+
 // Função handler para o evento de criação de mensagens
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Log para depuração
