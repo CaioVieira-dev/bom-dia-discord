@@ -16,87 +16,6 @@ type Banco struct {
 
 var mockBanco = []Banco{}
 
-// Handler para Slash Commands
-func slashCommandHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	switch i.ApplicationCommandData().Name {
-	case "bom-dia":
-		nome := i.Member.User.Username
-		id := i.Member.User.ID
-		if nome == "" {
-			nome = i.User.Username
-		}
-		if id == "" {
-			id = i.User.ID
-		}
-
-		mockBanco = append(mockBanco, Banco{
-			nome:        nome,
-			id:          id,
-			goodMorning: time.Now(),
-		})
-
-		fmt.Print(mockBanco)
-		response := "Bom dia! Espero que você tenha um ótimo dia hoje! 🌞"
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: response,
-			},
-		})
-	case "encerrando":
-		id := i.Member.User.ID
-		if id == "" {
-			id = i.User.ID
-		}
-
-		// Encontrar e editar a entrada no mockBanco com o mesmo id
-		found := false
-		for index, banco := range mockBanco {
-			if banco.id == id && !banco.goodMorning.IsZero() && banco.closing.IsZero() {
-				mockBanco[index].closing = time.Now()
-				found = true
-				break
-			}
-		}
-
-		if found {
-			fmt.Printf("Encontrado :)")
-			fmt.Print(mockBanco)
-			response := "Até mais! Espero que você tenha um ótimo descanso! 🌙"
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: response,
-				},
-			})
-		} else {
-			response := "Por que você está encerrando antes de dar bom dia?? "
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: response,
-				},
-			})
-		}
-
-	case "ping":
-		response := "Pong!"
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: response,
-			},
-		})
-	default:
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Comando não reconhecido.",
-			},
-		})
-	}
-}
-
 // Função handler para o evento de criação de mensagens
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Log para depuração
@@ -129,12 +48,39 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Responder a mensagens específicas
 	switch m.Content {
-	case "Olá":
-		fmt.Println("Respondendo à mensagem 'Olá'.")
-		s.ChannelMessageSend(m.ChannelID, "Olá! Posso te ajudar com algo?")
-	case "Ping":
-		fmt.Println("Respondendo à mensagem 'Ping'.")
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
+	case "bom dia":
+		nome := m.Author.Username
+		id := m.Author.ID
+
+		mockBanco = append(mockBanco, Banco{
+			nome:        nome,
+			id:          id,
+			goodMorning: time.Now(),
+		})
+
+		fmt.Print(mockBanco)
+		s.ChannelMessageSend(m.ChannelID, "Bom dia! Espero que você tenha um ótimo dia hoje! 🌞")
+	case "encerrando":
+		id := m.Author.ID
+
+		// Encontrar e editar a entrada no mockBanco com o mesmo id
+		found := false
+		for index, banco := range mockBanco {
+			if banco.id == id && !banco.goodMorning.IsZero() && banco.closing.IsZero() {
+				mockBanco[index].closing = time.Now()
+				found = true
+				break
+			}
+		}
+
+		if found {
+			fmt.Printf("Encontrado :)")
+			fmt.Print(mockBanco)
+
+			s.ChannelMessageSend(m.ChannelID, "Até mais! Espero que você tenha um ótimo descanso! 🌙")
+		} else {
+			s.ChannelMessageSend(m.ChannelID, "Por que você está encerrando antes de dar bom dia?? ")
+		}
 	default:
 		fmt.Println("Comando não reconhecido.")
 	}
