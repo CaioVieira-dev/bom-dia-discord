@@ -59,7 +59,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		})
 
 		fmt.Print(mockBanco)
-		s.ChannelMessageSend(m.ChannelID, "Bom dia! Espero que você tenha um ótimo dia hoje! 🌞")
+		err := s.MessageReactionAdd(m.ChannelID, m.ID, "🌞")
+		if err != nil {
+			fmt.Println("Erro ao adicionar reação:", err)
+		}
 	case "encerrando":
 		id := m.Author.ID
 
@@ -76,10 +79,15 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if found {
 			fmt.Printf("Encontrado :)")
 			fmt.Print(mockBanco)
-
-			s.ChannelMessageSend(m.ChannelID, "Até mais! Espero que você tenha um ótimo descanso! 🌙")
+			err := s.MessageReactionAdd(m.ChannelID, m.ID, "🌚")
+			if err != nil {
+				fmt.Println("Erro ao adicionar reação:", err)
+			}
 		} else {
-			s.ChannelMessageSend(m.ChannelID, "Por que você está encerrando antes de dar bom dia?? ")
+			err := s.MessageReactionAdd(m.ChannelID, m.ID, "❔")
+			if err != nil {
+				fmt.Println("Erro ao adicionar reação:", err)
+			}
 		}
 	default:
 		fmt.Println("Comando não reconhecido.")
