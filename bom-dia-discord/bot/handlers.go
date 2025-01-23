@@ -21,14 +21,14 @@ var mockBanco = []Banco{}
 // Função handler para o evento de criação de mensagens
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Log para depuração
-	fmt.Printf("Mensagem recebida: '%s' de %s#%s (ID: %s) no canal %s\n", m.Content, m.Author.Username, m.Author.Discriminator, m.Author.ID, m.ChannelID)
-	fmt.Printf("Tipo de mensagem: %d\n", m.Type)
-	fmt.Printf("Guild ID: %s\n", m.GuildID)
-	fmt.Printf("Channel ID: %s\n", m.ChannelID)
-	fmt.Printf("Message ID: %s\n", m.ID)
-	fmt.Printf("Timestamp: %s\n", m.Timestamp)
-	fmt.Printf("Edited Timestamp: %s\n", m.EditedTimestamp)
-	fmt.Printf("Content Raw: %s\n", m.ContentWithMentionsReplaced())
+	// fmt.Printf("Mensagem recebida: '%s' de %s#%s (ID: %s) no canal %s\n", m.Content, m.Author.Username, m.Author.Discriminator, m.Author.ID, m.ChannelID)
+	// fmt.Printf("Tipo de mensagem: %d\n", m.Type)
+	// fmt.Printf("Guild ID: %s\n", m.GuildID)
+	// fmt.Printf("Channel ID: %s\n", m.ChannelID)
+	// fmt.Printf("Message ID: %s\n", m.ID)
+	// fmt.Printf("Timestamp: %s\n", m.Timestamp)
+	// fmt.Printf("Edited Timestamp: %s\n", m.EditedTimestamp)
+	// fmt.Printf("Content Raw: %s\n", m.ContentWithMentionsReplaced())
 
 	// Ignorar mensagens do próprio bot
 	if m.Author.ID == s.State.User.ID {
@@ -97,8 +97,6 @@ func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 
 		if found {
-			fmt.Printf("Encontrado :)")
-			fmt.Print(mockBanco)
 			err := s.MessageReactionAdd(m.ChannelID, m.ID, "🌚")
 			if err != nil {
 				fmt.Println("Erro ao adicionar reação:", err)
