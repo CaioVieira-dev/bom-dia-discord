@@ -2,6 +2,8 @@ package bot
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -65,8 +67,8 @@ func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	// Responder a mensagens específicas
-	switch m.Content {
-	case "bom dia":
+	switch {
+	case matchString("(?i)^bom[ ]{0,1}dia", m.Content):
 		nome := m.Author.Username
 		id := m.Author.ID
 
@@ -81,7 +83,7 @@ func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if err != nil {
 			fmt.Println("Erro ao adicionar reação:", err)
 		}
-	case "encerrando":
+	case matchString("(?i)^encerrando", m.Content):
 		id := m.Author.ID
 
 		// Encontrar e editar a entrada no mockBanco com o mesmo id
@@ -113,8 +115,8 @@ func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func handleDM(s *discordgo.Session, m *discordgo.MessageCreate) {
-	switch m.Content {
-	case "!ponto":
+	switch {
+	case matchString("(?i)^!ponto", m.Content):
 		// Carregar a localização "America/Sao_Paulo"
 		location, err := time.LoadLocation("America/Sao_Paulo")
 		if err != nil {
@@ -168,4 +170,14 @@ func handleDM(s *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Println("Comando não reconhecido.")
 	}
 
+}
+
+func matchString(pattern, s string) bool {
+	trimmedS := strings.TrimSpace(s)
+	matched, err := regexp.MatchString(pattern, trimmedS)
+	if err != nil {
+		fmt.Println("Erro ao compilar regex:", err)
+		return false
+	}
+	return matched
 }
